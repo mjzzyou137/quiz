@@ -1,7 +1,7 @@
-import { Question } from "./question";
+import { Question } from "./question.js";
 
 export class MultipleChoice extends Question {
-  renderAnswers() {
+  renderContent() {
     return this.answers.reduce((previous, current) => {
       previous += `
         <div class="col-6">
@@ -9,11 +9,11 @@ export class MultipleChoice extends Question {
             <input
                 type="radio"
                 class="custom-control-input"
-                name="multiple-choice"
-                onclick="changeExact(${current.exact})"
-                id=`question-${current.id}`
+                name="multiple-choice-${this.id}"
+                value="${current.exact}"
+                id='question-${this.id}-${current.id}'
             />
-            <label class="custom-control-label" for=`question-${current.id}`
+            <label class="custom-control-label" for='question-${this.id}-${current.id}'
                 >${current.content}</label
             >
             </div>
@@ -24,20 +24,7 @@ export class MultipleChoice extends Question {
     }, ``);
   }
 
-  changeExact(exact) {
-    this.exact = exact
-  }
-
-  render() {
-    return `
-        <div class="quiz__content">
-            <div class="quiz__header">
-                <p>${this.content}:</p>
-            </div>
-            <div class="quiz__body row">
-                ${this.renderAnswers()}
-            </div>
-         </div>  
-      `;
+  getExact() {
+    return document.querySelector(`input[name='multiple-choice-${this.id}']:checked`)?.value || false;
   }
 }
